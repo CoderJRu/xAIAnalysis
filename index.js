@@ -28,13 +28,17 @@ var T = new Twit({
   timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
   strictSSL:            true,     // optional - requires SSL certificates to be valid.
 })*/
+const APP_KEY = process.env["APP_KEY"];
+const APP_SECRET = process.env["APP_SECRET"];
+const ACCESS_TOKEN = process.env["ACCESS_TOKEN"];
+const ACCESS_SECRET = process.env["ACCESS_SECRET"];
+const BEARER_TOKEN = process.env["BEARER_TOKEN"];
 const client = new TwitterApi({
-  appKey: "CID4dLhk7zJgzPs6bpdof79p6",
-  appSecret: "1jXwhmqJgBg9fRQeI2iJGJZIoy7ryKl9i7P9chp6Z0eezdozE1",
-  accessToken: "1875940077186195456-vCbBganoLerVnNOFigYDyM4RYSJMNI",
-  accessSecret: "O02Z6nseUjAdw80MlBn43lkH3KyZrv14ZgEYub5krOM5D",
-  bearerToken:
-    "AAAAAAAAAAAAAAAAAAAAAHnKxwEAAAAAiAYQF0q0kAtPlr5XHhpB80iDWjU%3DxPobpLg5tJAuTvpI1HcC8reaGKcDGqUYDTb8oeLPmIZ2fr97MO",
+  appKey: APP_KEY,
+  appSecret: APP_SECRET,
+  accessToken: ACCESS_TOKEN,
+  accessSecret: ACCESS_SECRET,
+  bearerToken: BEARER_TOKEN,
 });
 const rwClient = client.readWrite;
 const textTweet = async () => {
