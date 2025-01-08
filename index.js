@@ -6,28 +6,10 @@ const { testervar } = require("./test.js");
 const { fetchDexTrades } = require("./pumpfunApi.js");
 const { ModelGeneration } = require("./openAiAPI.js");
 
-const corsOption = {
-  origin: [
-    "https://38091a36-f5e0-4f69-abf4-8e2354cc1aee-00-1mt2da426qtul.riker.replit.dev:3001/",
-    "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd",
-    "https://xbundle-dapp.replit.app",
-    "https://xbundle.cloud",
-  ],
-  optionSucessStatus: 200,
-};
 //
 app.use(express.static("public"), express.json());
 
 var Twit = require("twit");
-/*
-var T = new Twit({
-  consumer_key:         'Ia41luwThL9BZpOsMCUlkFWS2',
-  consumer_secret:      'AhHDBbEwg2XOc7aVDs2kJY3PONOUlnj8hGrDFbqowJ7KQElIQ3',
-  access_token:         '1802749947457986560-Vuyk9dET3pI3GX5KqnqEJAuxto69NE',
-  access_token_secret:  'wCWT5bCGgJLwBTWkwqvqFHzNAOKRhYYRMb2UnUl1Fy1Oi',
-  timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
-  strictSSL:            true,     // optional - requires SSL certificates to be valid.
-})*/
 const APP_KEY = process.env["APP_KEY"];
 const APP_SECRET = process.env["APP_SECRET"];
 const ACCESS_TOKEN = process.env["ACCESS_TOKEN"];
@@ -120,17 +102,14 @@ const AIBuild = async () => {
   //console.log("no of des " + selectedCoin.description.split(" ").length);
   var suggest =
     selectedCoin.usd_market_cap > 10000000.96
-      ? `with a high market cap and favourable trade activities with solid liquidity, we recommend you to buy`
+      ? `a high market cap and favourable trade activities with solid liquidity, we recommend you to buy`
       : selectedCoin.usd_market_cap < 10000000.96 &&
           selectedCoin.usd_market_cap > 500000.0
-        ? `with less than 10m market cap moderate market cap and favourable trading activities,might be a wise choice to invest if you find the right dip to slurp`
-        : `with less than 500K market cap might be interesting if looking for a pump and making quick money!`;
-  var description =
-    selectedCoin.description.split(" ").length < 10
-      ? suggest
-      : `say one about the description "${selectedCoin.description}"`;
-  var AIGenSpeech = await ModelGeneration(symbol, suggest);
-  var proceedDes = `${AIGenSpeech.split(".")[0]}.`;
+        ? `less than 10m market cap moderate market cap and favourable trading activities,might be a wise choice to invest if you find the right dip to slurp`
+        : `less than 500K market cap might be interesting if looking for a pump and making quick money!`;
+  var description =selectedCoin.description;
+  var AIGenSpeech = await ModelGeneration(symbol, suggest, description);
+  var proceedDes = AIGenSpeech;
   var tweetContent = generateTweet(
     symbol,
     name,
@@ -141,7 +120,7 @@ const AIBuild = async () => {
   );
   //console.log( selectedCoin.description+"EEEEEEND");
   console.log(tweetContent);
-  //await rwClient.v2.tweet(tweetContent);
+ // await rwClient.v2.tweet(tweetContent);
 };
 
 const AItweet = async () => {
@@ -154,23 +133,11 @@ const AItweet = async () => {
 
 const reoccuringTweet = async () => {
   await AItweet();
-  //retweets every 5hours
-  await delay(18000000);
+  //retweets every 6hours
+  await delay(21600000);
   await reoccuringTweet();
 };
 reoccuringTweet();
-
-//FetchPumpFunData();
-
-//textTweet();
-//
-//  tweet 'hello world!'
-//
-/*
-T.post('statuses/update', { status: 'hello world!' }, function(err, data, response) {
-  console.log(data)
-})*/
-
 app.listen(8080, () => {
   console.log("server is running dick! at port 8080");
 });
